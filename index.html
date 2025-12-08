@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pokémon Regulation F Data</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#0f172a; color:#f1f5f9; padding:20px; }
+  .card { background:#1e293b; border-radius:12px; padding:15px; margin-bottom:20px; box-shadow:0 4px 8px rgba(0,0,0,0.3); position:relative; }
+  .sprite { width:80px; height:80px; position:absolute; top:15px; right:15px; }
+  h2 { margin:0 0 5px; }
+  .badges { display:flex; gap:10px; margin-bottom:10px; }
+  .badge { background:#334155; padding:4px 8px; border-radius:8px; font-size:0.8rem; }
+  .section { display:flex; gap:20px; margin-top:10px; }
+  .col { flex:1; }
+  .label { font-weight:bold; margin-bottom:5px; font-size:0.85rem; color:#cbd5e1; }
+  ul { margin:0; padding-left:20px; font-size:0.85rem; }
+  .item-pill { background:#facc15; color:#0f172a; padding:2px 6px; border-radius:6px; margin:2px; display:inline-block; font-size:0.75rem; }
+  .footer { margin-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; }
+  .resource { color:#facc15; text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div id="cards"></div>
+
+<template id="card-tpl">
+  <div class="card">
+    <h2 data-field="pokemon">—</h2>
+    <img data-field="sprite" class="sprite" src="" alt="Pokemon sprite">
+
+    <div data-field="date" style="font-size:0.8rem; color:#94a3b8; margin-bottom:10px;">—</div>
+
+    <div class="badges">
+      <div class="badge" data-field="common-moves-count">Common moves: —</div>
+      <div class="badge" data-field="items-count">Items: —</div>
+      <div class="badge" data-field="speed">Speed: —</div>
+    </div>
+
+    <div class="section">
+      <div class="col">
+        <div class="label">Common moves (&gt;25%)</div>
+        <ul data-field="common-moves"></ul>
+
+        <div class="label" style="margin-top:8px">Not common (&lt;25%)</div>
+        <ul data-field="not-common-moves"></ul>
+      </div>
+
+      <div class="col">
+        <div class="label">Rarely carry</div>
+        <ul data-field="rare-moves"></ul>
+
+        <div class="label" style="margin-top:8px">Items (&gt;10%)</div>
+        <div data-field="common-items"></div>
+
+        <div class="label" style="margin-top:8px">Items (&lt;10%)</div>
+        <div data-field="uncommon-items"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>
+        <div>EV trained (most common spread): <span data-field="ev">—</span></div>
+        <div>Most common speed: <span data-field="speed-text">—</span></div>
+      </div>
+      <a class="resource" data-field="resource" href="#">Resource</a>
+    </div>
+  </div>
+</template>
+
+<script>
+const container = document.getElementById('cards');
+const tpl = document.getElementById('card-tpl');
+
+function renderCard(data){
+  const node = tpl.content.cloneNode(true);
+
+  node.querySelector('[data-field=pokemon]').textContent = data.pokemon;
+  node.querySelector('[data-field=date]').textContent = 'Updated: '+data.date;
+  node.querySelector('[data-field=sprite]').src = data.sprite || '';
+  node.querySelector('[data-field=sprite]').alt = data.pokemon || 'Pokemon sprite';
+
+  node.querySelector('[data-field=common-moves-count]').textContent = 'Common moves: '+(data.commonMoves?.length||0);
+  node.querySelector('[data-field=items-count]').textContent = 'Items: '+((data.commonItems?.length||0) + (data.uncommonItems?.length||0));
+  node.querySelector('[data-field=speed]').textContent = data.speed||'—';
+  node.querySelector('[data-field=speed-text]').textContent = data.speedText||'—';
+  node.querySelector('[data-field=ev]').textContent = data.ev||'—';
+
+  const cm = node.querySelector('[data-field=common-moves]');
+  (data.commonMoves||[]).forEach(m=>{ const li=document.createElement('li'); li.textContent=m; cm.appendChild(li); });
+
+  const ncm = node.querySelector('[data-field=not-common-moves]');
+  (data.notCommonMoves||[]).forEach(m=>{ const li=document.createElement('li'); li.textContent=m; ncm.appendChild(li); });
+
+  const rm = node.querySelector('[data-field=rare-moves]');
+  (data.rareMoves||[]).forEach(m=>{ const li=document.createElement('li'); li.textContent=m; rm.appendChild(li); });
+
+  const ci = node.querySelector('[data-field=common-items]');
+  ci.innerHTML = (data.commonItems||[]).map(it=>`<span class="item-pill">${it}</span>`).join(' ');
+
+  const ui = node.querySelector('[data-field=uncommon-items]');
+  ui.innerHTML = (data.uncommonItems||[]).map(it=>`<span class="item-pill">${it}</span>`).join(' ');
+
+  const res = node.querySelector('[data-field=resource]');
+  res.setAttribute('href', data.resource||'#');
+  res.textContent = 'Source';
+
+  container.appendChild(node);
+}
+
+// Fetch JSON and render cards
+fetch('pokemonData.json')  // <-- Make sure the file is in the same folder
+  .then(res => res.json())
+  .then(data => data.forEach(renderCard))
+  .catch(err => console.error('Error loading JSON:', err));
+</script>
+
+</body>
+</html>

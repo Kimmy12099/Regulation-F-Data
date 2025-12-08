@@ -1,0 +1,30 @@
+[
+  {
+    "pokemon": "Garchomp",
+    "date": "2026-01-01",
+    "sprite": "https://img.pokemondb.net/sprites/scarlet-violet/normal/garchomp.png",
+    "commonMoves": ["Earthquake", "Outrage", "Stealth Rock"],
+    "notCommonMoves": ["Stone Edge", "Swords Dance"],
+    "rareMoves": ["Dragon Tail"],
+    "commonItems": ["Choice Scarf (32%)"],
+    "uncommonItems": ["Life Orb (8%)"],
+    "ev": "252 Atk / 4 SpD / 252 Spe",
+    "speed": "252",
+    "speedText": "252+ (Jolly)",
+    "resource": "https://pikalytics.com"
+  },
+  {
+    "pokemon": "Togekiss",
+    "date": "2026-01-01",
+    "sprite": "https://img.pokemondb.net/sprites/scarlet-violet/normal/togekiss.png",
+    "commonMoves": ["Air Slash", "Thunder Wave"],
+    "notCommonMoves": ["Dazzling Gleam"],
+    "rareMoves": ["Nasty Plot"],
+    "commonItems": ["Leftovers (45%)"],
+    "uncommonItems": ["Choice Specs (7%)"],
+    "ev": "252 HP / 4 Def / 252 Spe",
+    "speed": "252",
+    "speedText": "252 (Timid)",
+    "resource": "https://pikalytics.com"
+  }
+]
